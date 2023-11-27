@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.description {
+  @apply whitespace-nowrap overflow-hidden text-ellipsis;
+  line-clamp: 1;
+  transition: all 0.3s ease;
+}
