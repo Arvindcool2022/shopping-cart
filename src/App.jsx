@@ -1,33 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import Card from './components/Card.jsx';
+import { Provider } from 'react-redux';
+import appStore from './store/store.js';
+import { Outlet, createBrowserRouter } from 'react-router-dom';
+import Header from './components/Header';
+import Cart from './components/cart.jsx';
+import MainSection from './components/MainSection.jsx';
 
-export default function App() {
-  const [products, setProducts] = useState([]);
-  if (products.length > 10) products.length = 10;
-
-  const fetchProducts = async () => {
-    const res = await fetch('https://dummyjson.com/products');
-    const data = await res.json();
-
-    setProducts(data.products);
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
+function App() {
   return (
-    <main className="mt-4">
-      <div className="relative">
-        <h1 className="text-2xl text-center font-bold mb-4">Shopping Cart</h1>
-        <button className="absolute right-3 -top-1 py-1 px-4 border rounded">
-          Cart
-        </button>
-      </div>
-      <section className="grid gap-8 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-        {products.length &&
-          products.map(product => <Card data={product} key={product.id} />)}
-      </section>
-    </main>
+    <Provider store={appStore}>
+      <main className="mt-4">
+        <Header />
+        <Outlet />
+      </main>
+    </Provider>
   );
 }
+
+const appRouter = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      { path: '/', element: <MainSection /> },
+      { path: '/cart', element: <Cart /> }
+    ]
+  }
+]);
+
+export default appRouter;
